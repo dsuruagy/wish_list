@@ -26,6 +26,12 @@ public class WishList {
     @Column
     private LocalDate dateModified;
 
+    @Column
+    private Character type;
+
+    @Column(name = "OPENED")
+    private Character isOpen;
+
     @ManyToOne
     private User owner;
 
@@ -78,6 +84,22 @@ public class WishList {
 
     public void setDateModified(LocalDate dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public Character getType() {
+        return type;
+    }
+
+    public void setType(Character type) {
+        this.type = type;
+    }
+
+    public Character getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(Character isOpen) {
+        this.isOpen = isOpen;
     }
 
     public User getOwner() {

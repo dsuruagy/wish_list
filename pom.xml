@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.2</version>
+		<version>2.5.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dsuruagy</groupId>
-	<artifactId>wishlist</artifactId>
+	<artifactId>wishpurchase</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Wish List</name>
-	<description>Wish List application using Spring Boot</description>
+	<name>Wish Purchase</name>
+	<description>Wish Purchase application using Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -36,7 +36,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>6.4.4</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

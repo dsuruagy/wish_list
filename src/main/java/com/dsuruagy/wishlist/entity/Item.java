@@ -22,7 +22,7 @@ public class Item {
     private LocalDate dateCreated;
 
     @Column
-    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     @ManyToMany
     @JoinTable(name="WISH_LIST_ITEM",
@@ -62,12 +62,12 @@ public class Item {
         this.dateCreated = dateCreated;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getCurrentPrice() {
+        return currentPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
     public Set<WishList> getWishLists() {

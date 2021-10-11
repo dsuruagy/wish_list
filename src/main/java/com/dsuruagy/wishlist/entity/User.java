@@ -1,27 +1,35 @@
 package com.dsuruagy.wishlist.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "USER")
 public class User {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "USERNAME")
+    @NotNull
     private String username;
 
     @Column
+    @NotNull
     private String password;
 
     @Column(name = "FIRST_NAME")
+    @NotNull
     private String firstName;
 
-    @Column
+    @Column(name = "LAST_NAME")
+    @NotNull
     private String lastName;
 
     @Column
+    @Email
     private String email;
 
     public Long getId() {

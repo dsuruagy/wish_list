@@ -16,6 +16,11 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<flyway.user>wl_user</flyway.user>
+		<flyway.password>wl_pass</flyway.password>
+		<flyway.schemas>wlist</flyway.schemas>
+		<flyway.url>jdbc:mysql://localhost:9906/wlist</flyway.url>
+		<flyway.locations>filesystem:src/main/resources/db/migration/</flyway.locations>
 	</properties>
 
 	<dependencies>
@@ -30,6 +35,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -53,6 +62,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

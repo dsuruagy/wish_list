@@ -1,38 +1,45 @@
 package com.dsuruagy.wishlist.entity;
 
+import javax.validation.constraints.NotNull;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Entity
+@Entity(name = "WISH_LIST")
 public class WishList {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
+    @NotNull
     private String name;
 
     @Column
     private String description;
 
-    @Column
-    private Character isPublic;
+    @Column(name = "PUBLIC")
+    private Boolean publicToOthers;
 
-    @Column
+    @Column(name = "DATE_CREATED")
     private LocalDate dateCreated;
 
-    @Column
+    @Column(name = "DATE_MODIFIED")
     private LocalDate dateModified;
 
+    /**
+     * Allowed values are T - temporary, like supermarket, or P - persistent
+     */
     @Column
     private Character type;
 
-    @Column(name = "OPENED")
-    private Character isOpen;
+    @Column
+    private Boolean opened;
 
     @ManyToOne
+    @JoinColumn(name = "USER_ID")
     private User owner;
 
     @ManyToMany(mappedBy = "wishLists")
@@ -62,12 +69,12 @@ public class WishList {
         this.description = description;
     }
 
-    public Character getIsPublic() {
-        return isPublic;
+    public Boolean isPublicToOthers() {
+        return publicToOthers;
     }
 
-    public void setIsPublic(Character isPublic) {
-        this.isPublic = isPublic;
+    public void setPublicToOthers(Boolean publicToOthers) {
+        this.publicToOthers = publicToOthers;
     }
 
     public LocalDate getDateCreated() {
@@ -94,12 +101,12 @@ public class WishList {
         this.type = type;
     }
 
-    public Character getIsOpen() {
-        return isOpen;
+    public Boolean isOpened() {
+        return opened;
     }
 
-    public void setIsOpen(Character isOpen) {
-        this.isOpen = isOpen;
+    public void setOpened(Boolean opened) {
+        this.opened = opened;
     }
 
     public User getOwner() {

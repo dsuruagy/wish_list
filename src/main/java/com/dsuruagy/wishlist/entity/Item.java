@@ -3,13 +3,15 @@ package com.dsuruagy.wishlist.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name="ITEM")
 public class Item {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -18,17 +20,17 @@ public class Item {
     @Column
     private String url;
 
-    @Column
+    @Column(name = "DATE_CREATED")
     private LocalDate dateCreated;
 
-    @Column
+    @Column(name = "CURRENT_PRICE")
     private BigDecimal currentPrice;
 
     @ManyToMany
     @JoinTable(name="WISH_LIST_ITEM",
     joinColumns = @JoinColumn(name = "ITEM_ID"),
     inverseJoinColumns = @JoinColumn(name = "WISH_LIST_ID"))
-    private Set<WishList> wishLists;
+    private Set<WishList> wishLists = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -76,5 +78,15 @@ public class Item {
 
     public void setWishLists(Set<WishList> wishLists) {
         this.wishLists = wishLists;
+    }
+
+    public void addWishList(WishList wishList) {
+        this.getWishLists().add(wishList);
+        wishList.getItems().add(this);
+    }
+
+    public void removeWishList(WishList wishList) {
+        this.getWishLists().remove(wishList);
+        wishList.removeItem(this);
     }
 }

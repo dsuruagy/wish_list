@@ -4,9 +4,11 @@ import javax.validation.constraints.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "WISH_LIST")
+@Entity
+@Table(name = "WISH_LIST")
 public class WishList {
     @Id
     @Column
@@ -115,5 +117,19 @@ public class WishList {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item item) {
+        this.getItems().add(item);
+        item.getWishLists().add(this);
+    }
+
+    public void removeItem(Item item) {
+        this.getItems().remove(item);
+        item.getWishLists().remove(this);
     }
 }

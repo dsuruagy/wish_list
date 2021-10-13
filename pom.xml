@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dsuruagy</groupId>
-	<artifactId>wishpurchase</artifactId>
+	<artifactId>wishlist</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Wish Purchase</name>
-	<description>Wish Purchase application using Spring Boot</description>
+	<name>Wish List</name>
+	<description>Wish List application using Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>

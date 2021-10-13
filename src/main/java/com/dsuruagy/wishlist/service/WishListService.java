@@ -37,4 +37,12 @@ public class WishListService {
     public List<WishList> findAllByOwner(Long id) {
         return repository.findAllByOwnerId(id);
     }
+
+    public WishList findByIdWithAllItems(Long id) {
+        return repository.findByIdWithAllItems(id);
+    }
+
+    public WishList getById(Long id) {
+        return repository.getById(id);
+    }
 }

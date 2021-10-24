@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `wlist`.`ITEM` (
   `NAME` VARCHAR(100) NOT NULL COMMENT 'Wish list item name',
   `URL` VARCHAR(300) NULL COMMENT 'Wish list item URL',
   `DATE_CREATED` DATETIME NOT NULL COMMENT 'Wish list item creation date',
-  `CURRENT_PRICE` DECIMAL NOT NULL COMMENT 'Wish list item current price',
+  `CURRENT_PRICE` DECIMAL(20,2) NOT NULL COMMENT 'Wish list item current price',
   PRIMARY KEY (`ID`))
 ENGINE = InnoDB
 COMMENT = 'Wish list items';

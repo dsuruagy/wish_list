@@ -91,8 +91,8 @@ public class ServiceIntegrationTest {
         Assertions.assertNotNull(wishList);
 
         Item item = new Item();
-        item.setName("A new Item");
-        item.setUrl("http://www.amazon.com.br");
+        item.setName("Fone de Ouvido, JBL, Tune 110 Intra-Auricular, Preto");
+        item.setUrl("https://www.amazon.com.br/dp/B01MG62Z5M/?coliid=I16KA24S90HERU&colid=17ARWAJJQ7ZEL&psc=1&ref_=lv_ov_lig_dp_it");
         item.setCurrentPrice(new BigDecimal("13.89"));
         item.addWishList(wishList);
 

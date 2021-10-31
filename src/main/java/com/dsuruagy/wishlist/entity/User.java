@@ -1,5 +1,7 @@
 package com.dsuruagy.wishlist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -18,6 +20,7 @@ public class User {
 
     @Column
     @NotNull
+    @JsonIgnore
     private String password;
 
     @Column(name = "FIRST_NAME")

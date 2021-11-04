@@ -42,7 +42,15 @@ public class WishListService {
         return repository.findByIdWithAllItems(id);
     }
 
+    public WishList findByName(String name) {
+        return repository.findByName(name);
+    }
+
     public WishList getById(Long id) {
         return repository.getById(id);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

@@ -11,4 +11,6 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
 
     @Query("SELECT w FROM WishList w LEFT JOIN FETCH w.items WHERE w.id = ?1")
     WishList findByIdWithAllItems(Long id);
+
+    WishList findByName(String name);
 }

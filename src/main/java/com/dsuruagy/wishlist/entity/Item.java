@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,22 +15,20 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true,
+            columnDefinition = "varchar(100)")
     private String name;
 
-    @Column
+    @Column(columnDefinition = "varchar(300)")
     private String url;
 
-    @Column(name = "DATE_CREATED")
-    private LocalDate dateCreated;
+    @Column(name = "DATE_CREATED", nullable = false, updatable = false)
+    private LocalDate dateCreated = LocalDate.now();
 
     @Column(name = "CURRENT_PRICE")
     private BigDecimal currentPrice;
 
-    @ManyToMany
-    @JoinTable(name="WISH_LIST_ITEM",
-    joinColumns = @JoinColumn(name = "ITEM_ID"),
-    inverseJoinColumns = @JoinColumn(name = "WISH_LIST_ID"))
+    @ManyToMany(mappedBy = "items")
     private Set<WishList> wishLists = new HashSet<>();
 
     public Long getId() {
@@ -76,10 +75,6 @@ public class Item {
         return wishLists;
     }
 
-    public void setWishLists(Set<WishList> wishLists) {
-        this.wishLists = wishLists;
-    }
-
     public void addWishList(WishList wishList) {
         this.getWishLists().add(wishList);
         wishList.getItems().add(this);
@@ -88,5 +83,18 @@ public class Item {
     public void removeWishList(WishList wishList) {
         this.getWishLists().remove(wishList);
         wishList.removeItem(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return name.equals(item.name) && Objects.equals(url, item.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, url);
     }
 }

@@ -53,4 +53,8 @@ public class WishListService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public void save(WishList wishList) {
+        repository.save(wishList);
+    }
 }

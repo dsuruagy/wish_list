@@ -15,18 +15,18 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, columnDefinition = "varchar(255)")
     @NotNull
     private String name;
 
-    @Column
+    @Column(columnDefinition = "varchar(4000)")
     private String description;
 
-    @Column(name = "PUBLIC")
+    @Column(name = "PUBLIC_TO_OTHERS", columnDefinition = "tinyint default 1")
     private Boolean publicToOthers;
 
-    @Column(name = "DATE_CREATED")
-    private LocalDate dateCreated;
+    @Column(name = "DATE_CREATED", nullable = false)
+    private LocalDate dateCreated = LocalDate.now();
 
     @Column(name = "DATE_MODIFIED")
     private LocalDate dateModified;
@@ -34,18 +34,21 @@ public class WishList {
     /**
      * Allowed values are T - temporary, like supermarket, or P - persistent
      */
-    @Column
+    @Column(nullable = false, columnDefinition = "char(1) default 'P'")
     private Character type;
 
-    @Column
+    @Column(nullable = false, columnDefinition = "tinyint default 1")
     private Boolean opened;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User owner;
 
-    @ManyToMany(mappedBy = "wishLists")
-    private Set<Item> items;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name="WISH_LIST_ITEM",
+            joinColumns = @JoinColumn(name = "WISH_LIST_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+    private Set<Item> items = new HashSet<>();
 
     public Long getId() {
         return id;

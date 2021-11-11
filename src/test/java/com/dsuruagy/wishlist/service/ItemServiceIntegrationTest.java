@@ -16,6 +16,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 @SpringBootTest
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
@@ -34,25 +35,8 @@ public class ItemServiceIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        itemService = new ItemService(itemRepository);
+        itemService = new ItemService(itemRepository, wishListRepository);
         wishListService = new WishListService(wishListRepository);
-    }
-
-    @Test
-    public void createNewItemWithoutWishListTest() {
-        Item item = new Item();
-        item.setName("A new Item");
-        item.setUrl("http://www.amazon.com.br");
-        item.setCurrentPrice(new BigDecimal("13.89"));
-
-        Exception exception = Assertions.assertThrows(BusinessException.class, () ->
-           itemService.create(item)
-        );
-
-        String message = "be associated with at least one wishlist";
-        String actualMessage = exception.getMessage();
-
-        Assertions.assertTrue(actualMessage.contains(message));
     }
 
     @Test
@@ -69,5 +53,38 @@ public class ItemServiceIntegrationTest {
         Item createdItem = Assertions.assertDoesNotThrow(() -> itemService.create(item));
         Assertions.assertNotNull(createdItem.getDateCreated());
         Assertions.assertFalse(createdItem.getWishLists().isEmpty());
+    }
+
+    public Item createNewItem(Long wishListId) {
+        WishList wishList = wishListService.findByIdWithAllItems(wishListId);
+
+        Item item = new Item();
+        item.setName("Simple item " + new Random().nextInt(100));
+        item.addWishList(wishList);
+
+        wishListService.save(wishList);
+        return item;
+    }
+
+    @Test
+    public void deleteItemTest() {
+        Long wishListId = 1L;
+
+        Item firstItem = createNewItem(wishListId);
+
+        int sizeBefore = wishListService.findByIdWithAllItems(wishListId).getItems().size();
+        System.out.println("sizeBefore: " + sizeBefore);
+        Assertions.assertEquals(firstItem,
+                wishListService.findByIdWithAllItems(wishListId).getItems().stream().findFirst().get());
+
+        Item secondItem = createNewItem(wishListId);
+        Assertions.assertEquals(sizeBefore + 1,
+                wishListService.findByIdWithAllItems(wishListId).getItems().size());
+
+        itemService.delete(secondItem);
+
+        Assertions.assertEquals(sizeBefore,
+                wishListService.findByIdWithAllItems(wishListId).getItems().size());
+
     }
 }

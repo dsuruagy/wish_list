@@ -1,38 +1,37 @@
 package com.dsuruagy.wishlist.service;
 
-import com.dsuruagy.wishlist.business.exception.BusinessException;
 import com.dsuruagy.wishlist.entity.Item;
+import com.dsuruagy.wishlist.entity.WishList;
 import com.dsuruagy.wishlist.repository.ItemRepository;
+import com.dsuruagy.wishlist.repository.WishListRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final WishListRepository wishListRepository;
 
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(ItemRepository itemRepository, WishListRepository wishListRepository) {
         this.itemRepository = itemRepository;
+        this.wishListRepository = wishListRepository;
     }
 
-    public Item create(Item item) throws BusinessException {
-        item.setDateCreated(LocalDate.now());
-
-        return this.save(item);
+    public Item create(Item item) {
+        return itemRepository.save(item);
     }
 
     public Item getById(Long id) {
         return itemRepository.getById(id);
     }
 
-    public Item save(Item item) throws BusinessException {
-        if(item.getWishLists().isEmpty()) {
-            throw new BusinessException("Need to be associated with at least one wishlist");
-        }
-        return itemRepository.save(item);
-    }
+    public void delete(Item item) {
+        Item i = itemRepository.findByNameWithAllWishLists(item.getName());
+        i.getWishLists().forEach(w -> {
+            WishList wlWithItems = wishListRepository.findByIdWithAllItems(w.getId());
+            wlWithItems.removeItem(i);
+            wishListRepository.save(wlWithItems);
+        });
 
-    public void delete(Long id) {
-        itemRepository.deleteById(id);
+        itemRepository.delete(i);
     }
 }

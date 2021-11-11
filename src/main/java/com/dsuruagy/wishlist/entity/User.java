@@ -14,20 +14,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME", nullable = false,
+            columnDefinition = "varchar(100)")
     @NotNull
     private String username;
 
-    @Column
+    @Column(nullable = false, columnDefinition = "varchar(20)")
     @NotNull
     @JsonIgnore
     private String password;
 
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME", nullable = false, columnDefinition = "varchar(255)")
     @NotNull
     private String firstName;
 
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME", nullable = false, columnDefinition = "varchar(255)")
     @NotNull
     private String lastName;
 

@@ -23,7 +23,7 @@ public class WishList {
     private String description;
 
     @Column(name = "PUBLIC_TO_OTHERS", columnDefinition = "tinyint default 1")
-    private Boolean publicToOthers;
+    private Boolean publicToOthers = true;
 
     @Column(name = "DATE_CREATED", nullable = false)
     private LocalDate dateCreated = LocalDate.now();
@@ -35,19 +35,21 @@ public class WishList {
      * Allowed values are T - temporary, like supermarket, or P - persistent
      */
     @Column(nullable = false, columnDefinition = "char(1) default 'P'")
-    private Character type;
+    private Character type = 'P';
 
     @Column(nullable = false, columnDefinition = "tinyint default 1")
-    private Boolean opened;
+    private Boolean opened = true;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name="FK_USER"))
     private User owner;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="WISH_LIST_ITEM",
             joinColumns = @JoinColumn(name = "WISH_LIST_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+            foreignKey = @ForeignKey(name="FK_WISH_LIST"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID"),
+            inverseForeignKey = @ForeignKey(name="FK_ITEM"))
     private Set<Item> items = new HashSet<>();
 
     public Long getId() {

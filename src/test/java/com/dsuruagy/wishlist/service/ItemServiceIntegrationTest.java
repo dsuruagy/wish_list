@@ -1,6 +1,5 @@
 package com.dsuruagy.wishlist.service;
 
-import com.dsuruagy.wishlist.business.exception.BusinessException;
 import com.dsuruagy.wishlist.entity.Item;
 import com.dsuruagy.wishlist.entity.WishList;
 import com.dsuruagy.wishlist.repository.ItemRepository;
@@ -15,6 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Random;
 
@@ -24,6 +24,7 @@ import java.util.Random;
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:test-datasets.xml")
+@Transactional
 public class ItemServiceIntegrationTest {
     @Autowired
     private ItemRepository itemRepository;

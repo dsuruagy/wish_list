@@ -13,12 +13,15 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.transaction.Transactional;
+
 @SpringBootTest
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:test-datasets.xml")
+@Transactional
 public class WishListServiceIntegrationTest {
     @Autowired
     private WishListRepository wishListRepository;
@@ -61,7 +64,7 @@ public class WishListServiceIntegrationTest {
         Long id = wishListService.findByName("My wish list").getId();
         wishListService.delete(id);
 
-        Assertions.assertEquals(1, wishListService.findAllByOwner(1L).size());
+        Assertions.assertEquals(2, wishListService.findAllByOwner(1L).size());
 
     }
 }

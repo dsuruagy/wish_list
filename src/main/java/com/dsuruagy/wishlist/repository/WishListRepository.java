@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WishListRepository extends JpaRepository<WishList, Long> {
+    @Query("SELECT w FROM WishList w")
+    List<WishList> findAll();
+
     List<WishList> findAllByOwnerId(Long id);
 
     @Query("SELECT w FROM WishList w LEFT JOIN FETCH w.items WHERE w.id = ?1")

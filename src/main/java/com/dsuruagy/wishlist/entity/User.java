@@ -21,7 +21,6 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "varchar(20)")
     @NotNull
-    @JsonIgnore
     private String password;
 
     @Column(name = "FIRST_NAME", nullable = false, columnDefinition = "varchar(255)")

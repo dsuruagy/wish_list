@@ -3,9 +3,7 @@ package com.dsuruagy.wishlist.controller;
 import com.dsuruagy.wishlist.entity.Item;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -17,9 +15,10 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.math.BigDecimal;
-import java.util.Random;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
@@ -29,11 +28,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:test-datasets.xml")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ItemControllerTest {
     public static final String NAME = "Controller Integration Item Test";
     public static final String URL = "https://example.com";
     public static final String VAL = "399.99";
-    public final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     public static final String REST_URL = "/items";
 
     @Autowired
@@ -42,24 +41,47 @@ public class ItemControllerTest {
     @Test
     public void saveItem() {
         Item item = new Item();
-        item.setName(NAME + new Random().nextInt(1000));
+        item.setName(NAME);
         item.setUrl(URL);
         item.setCurrentPrice(new BigDecimal(VAL));
 
-        ResponseEntity response = restTemplate.postForEntity(REST_URL, item, Item.class);
+        // Many to many RESTful API
+        // https://stackoverflow.com/questions/6324547/how-can-i-handle-many-to-many-relationships-in-a-restful-api
+
+        ResponseEntity<Item> response = restTemplate.postForEntity(REST_URL, item, Item.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
     }
 
     @Test
+    public void nameConflictTest() {
+        Item item = new Item();
+        item.setName(NAME + " Another One");
+        item.setUrl(URL + "/another");
+        item.setCurrentPrice(new BigDecimal("200"));
+
+        ResponseEntity<Item> response = restTemplate.postForEntity(REST_URL, item, Item.class); // First insert
+        response = restTemplate.postForEntity(REST_URL, item, Item.class); // Second insert
+
+        assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
+    }
+
+    @Test
+    @Order(value = 1)
+    // TODO: Try to identify why this test must be the first one. It will not work unless this annotation is been used.
     public void findOneItemTest() {
-        saveItem();
+        Item item = new Item();
+        item.setName(NAME + " More than one");
+        item.setUrl(URL + "/another");
+        item.setCurrentPrice(new BigDecimal("200"));
 
-        ResponseEntity<Item> response =
-                restTemplate.getForEntity(REST_URL + "/1", Item.class);
+        ResponseEntity<Item> responsePost = restTemplate.postForEntity(REST_URL, item, Item.class); // First insert
 
-        assertThat(response.getStatusCode(),
-                is(HttpStatus.OK));
-        assertThat(response.getBody().getUrl(), is(URL));
+        ResponseEntity<Item> responseGet =
+                restTemplate.getForEntity(REST_URL + "/2", Item.class);
+
+        assertThat(responseGet.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseGet.getBody(), notNullValue());
+        assertThat(Objects.requireNonNull(responseGet.getBody()).getUrl(), is(URL + "/another"));
 
     }
 

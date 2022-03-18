@@ -1,10 +1,11 @@
 package com.dsuruagy.wishlist.controller;
 
+import com.dsuruagy.wishlist.entity.Item;
 import com.dsuruagy.wishlist.entity.WishList;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import com.github.springtestdbunit.annotation.DatabaseTearDown;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,7 +30,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
-@DatabaseSetup("classpath:test-datasets.xml")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WishListControllerTest {
     public final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     public static final String URL = "/wishLists";
@@ -37,6 +39,10 @@ public class WishListControllerTest {
     private TestRestTemplate restTemplate;
 
     @Test
+    @DatabaseSetup("classpath:test-datasets.xml")
+    @DatabaseTearDown
+    @Order(value=1)
+    // TODO: Try to identify why this test fails if it is not the first one.
     public void findOneWishListTest() {
         ResponseEntity<WishList> response =
                 restTemplate.getForEntity(URL + "/1", WishList.class);
@@ -44,19 +50,32 @@ public class WishListControllerTest {
         LOGGER.debug("response.getBody():" + response.getBody());
         assertThat(response.getStatusCode(),
                 is(HttpStatus.OK));
-        assertThat(response.getBody().getName(), is("Wishlist test"));
+        assertThat(Objects.requireNonNull(response.getBody()).getName(), is("Wishlist test 1"));
 
     }
 
     @Test
-    @Disabled
     public void findAllWishListsTest() {
         ResponseEntity<WishList[]> response =
             restTemplate.getForEntity(URL, WishList[].class);
 
         assertThat(response.getStatusCode(),
                 is(HttpStatus.OK));
-        assertThat(response.getBody().length, is(3));
+        assertThat(Objects.requireNonNull(response.getBody()).length, is(2));
         //https://stackoverflow.com/questions/41567455/spring-boots-testresttemplate-with-hateoas-pagedresources
+    }
+
+    @Test
+    @DatabaseSetup("classpath:test-datasets.xml")
+    @DatabaseTearDown
+    public void postNewItemTest() {
+        Item item = new Item();
+        item.setName("New Item");
+        item.setUrl(URL);
+        item.setCurrentPrice(new BigDecimal("12.00"));
+
+        ResponseEntity<Item> response = restTemplate.postForEntity(URL + "/1/items", item, Item.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+
     }
 }

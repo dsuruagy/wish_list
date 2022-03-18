@@ -29,6 +29,10 @@ public class WishListService {
         return repository.save(wishList);
     }
 
+    public List<WishList> findAll() {
+        return repository.findAll();
+    }
+
     /**
      * Find all wishlists of a user.
      * @param id Owner's Id.

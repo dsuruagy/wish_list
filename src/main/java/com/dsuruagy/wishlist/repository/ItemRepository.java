@@ -35,5 +35,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i LEFT JOIN FETCH i.wishLists WHERE i.name = ?1")
     Item findByNameWithAllWishLists(String name);
 
+    @Query("SELECT i FROM Item i WHERE i.id = ?1")
+    Item findById(long id);
 
 }

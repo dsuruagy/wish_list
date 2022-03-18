@@ -3,6 +3,10 @@
     <USER ID="1" USERNAME="testuser" PASSWORD="userpass"
           EMAIL="test@dsuruagy.com" FIRST_NAME="Testing"
           LAST_NAME="User"/>
-    <WISH_LIST ID="1" NAME="Wishlist test" DESCRIPTION="A DBUnit wishlist test"
+    <WISH_LIST ID="1" NAME="Wishlist test 1" DESCRIPTION="A DBUnit wishlist test"
                DATE_CREATED="2021-01-01 00:00:00" USER_ID="1"/>
+    <WISH_LIST ID="2" NAME="Wishlist test 2" DESCRIPTION="A DBUnit wishlist test"
+               DATE_CREATED="2021-02-01 00:00:00" USER_ID="1"/>
+    <ITEM ID="1" NAME="DBUnit Test Item" DATE_CREATED="2021-11-21 00:00:00" URL="https://www.dbunit.org/"
+          CURRENT_PRICE="25.95"/>
 </dataset>
